@@ -183,12 +183,12 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted, onBeforeUnmount } from "vue";
+import { ref, computed, watch, onMounted, onBeforeUnmount, defineAsyncComponent } from "vue";
 import { useRoute, useRouter, RouterLink } from "vue-router";
 import ChangeCoverModal from "../modals/ChangeCoverModal.vue";
 import ChangeModal from "../modals/ChangeModal.vue";
 import BidModal from "../modals/BidModal.vue";
-import MarkdownViewer from "../components/MarkdownViewer.vue";
+const MarkdownViewer = defineAsyncComponent(() => import("../components/MarkdownViewer.vue"));
 import { useAucationsStore } from "../states/aucationsStore";
 import { useUsersStore } from "../../users/states/usersStore";
 import {

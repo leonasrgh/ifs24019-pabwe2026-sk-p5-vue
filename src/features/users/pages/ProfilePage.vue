@@ -70,11 +70,12 @@
 
         <form @submit.prevent="handleUpdateProfile" class="space-y-4">
           <div>
-            <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">
+            <label for="profile-name-input" class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">
               Nama Lengkap
             </label>
             <input
               type="text"
+              id="profile-name-input"
               data-testid="profile-name-input"
               v-model="name"
               class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 transition-all"
@@ -83,11 +84,12 @@
           </div>
 
           <div>
-            <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">
+            <label for="profile-email-input" class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">
               Alamat Email
             </label>
             <input
               type="email"
+              id="profile-email-input"
               data-testid="profile-email-input"
               v-model="email"
               class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 transition-all"

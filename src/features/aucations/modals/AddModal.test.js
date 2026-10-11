@@ -1,8 +1,22 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { nextTick } from "vue";
+import { flushPromises } from "@vue/test-utils";
 import AddModal from "./AddModal.vue";
 import { renderWithProviders } from "../../../test-utils";
 import * as toolsHelper from "../../../helpers/toolsHelper";
+
+async function mountModal(props) {
+  const result = renderWithProviders(AddModal, { props });
+  await flushPromises();
+  const isReady = props.show && (props.aucation !== undefined ? Boolean(props.aucation) : true);
+  if (isReady) {
+    // Editor Markdown dimuat lazy (dynamic import), tunggu sampai textarea-nya tersedia.
+    await vi.waitFor(() => {
+      expect(result.wrapper.find('[data-testid$="description-input"]').exists()).toBe(true);
+    }, { timeout: 10000 });
+  }
+  return result;
+}
 
 const TID = (id) => `[data-testid="${id}"]`;
 
@@ -21,13 +35,13 @@ describe("AddModal", () => {
     errorSpy = vi.spyOn(toolsHelper, "showErrorDialog").mockImplementation(() => {});
   });
 
-  it("should not render when show is false", () => {
-    const { wrapper } = renderWithProviders(AddModal, { props: { show: false } });
+  it("should not render when show is false", async () => {
+    const { wrapper } = await mountModal({ show: false });
     expect(wrapper.find(TID("add-aucation-modal")).exists()).toBe(false);
   });
 
   it("should render and toggle body scroll lock with show", async () => {
-    const { wrapper } = renderWithProviders(AddModal, { props: { show: true } });
+    const { wrapper } = await mountModal({ show: true });
     expect(wrapper.find(TID("add-aucation-modal")).exists()).toBe(true);
 
     await wrapper.setProps({ show: false });
@@ -37,7 +51,7 @@ describe("AddModal", () => {
   });
 
   it("should validate each required field in order", async () => {
-    const { wrapper } = renderWithProviders(AddModal, { props: { show: true } });
+    const { wrapper } = await mountModal({ show: true });
     const submit = () => wrapper.find("form").trigger("submit");
 
     await submit();
@@ -61,7 +75,7 @@ describe("AddModal", () => {
   });
 
   it("should submit trimmed values with API date format and show loading", async () => {
-    const { wrapper, aucationsStore } = renderWithProviders(AddModal, { props: { show: true } });
+    const { wrapper, aucationsStore } = await mountModal({ show: true });
     const addSpy = vi.spyOn(aucationsStore, "asyncSetIsAucationAdd").mockImplementation(() => {});
 
     await fillForm(wrapper, {
@@ -78,7 +92,7 @@ describe("AddModal", () => {
   });
 
   it("should reload list, reset form and close when add succeeded", async () => {
-    const { wrapper, aucationsStore } = renderWithProviders(AddModal, { props: { show: true } });
+    const { wrapper, aucationsStore } = await mountModal({ show: true });
     const reload = vi.spyOn(aucationsStore, "asyncReloadAucations").mockImplementation(() => {});
     vi.spyOn(aucationsStore, "asyncSetIsAucationAdd").mockImplementation(() => {});
 
@@ -97,7 +111,7 @@ describe("AddModal", () => {
   });
 
   it("should stay open when add finished but failed", async () => {
-    const { wrapper, aucationsStore } = renderWithProviders(AddModal, { props: { show: true } });
+    const { wrapper, aucationsStore } = await mountModal({ show: true });
     const reload = vi.spyOn(aucationsStore, "asyncReloadAucations").mockImplementation(() => {});
 
     aucationsStore.setIsAucationAdded(false);
@@ -110,7 +124,7 @@ describe("AddModal", () => {
   });
 
   it("should emit close from close and cancel buttons", async () => {
-    const { wrapper } = renderWithProviders(AddModal, { props: { show: true } });
+    const { wrapper } = await mountModal({ show: true });
     await wrapper.find(TID("close-add-modal-btn")).trigger("click");
     await wrapper.find(TID("cancel-add-modal-btn")).trigger("click");
     expect(wrapper.emitted("close")).toHaveLength(2);

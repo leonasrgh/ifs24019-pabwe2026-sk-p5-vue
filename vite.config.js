@@ -20,6 +20,9 @@ export default defineConfig(({ mode }) => {
         env.VITE_DELCOM_BASEURL || "https://open-api.delcom.org/api/v1"
       ),
     },
+    build: {
+    sourcemap: true,
+    },
     test: {
       globals: true,
       environment: "jsdom",

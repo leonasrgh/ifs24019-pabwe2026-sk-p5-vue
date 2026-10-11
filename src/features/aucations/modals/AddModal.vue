@@ -119,11 +119,11 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import { ref, watch, defineAsyncComponent } from "vue";
 import { Plus, X, Loader2 } from "lucide-vue-next";
 import { useAucationsStore } from "../states/aucationsStore";
 import { showErrorDialog, toApiDateTime } from "../../../helpers/toolsHelper";
-import MarkdownEditor from "../components/MarkdownEditor.vue";
+const MarkdownEditor = defineAsyncComponent(() => import("../components/MarkdownEditor.vue"));
 
 const props = defineProps({
   show: {

@@ -64,7 +64,7 @@
             </div>
 
             <div class="min-w-0 flex-1">
-              <h3 class="font-bold text-slate-900 truncate">{{ u.name }}</h3>
+              <h2 class="font-bold text-slate-900 truncate">{{ u.name }}</h2>
               <p class="text-xs text-slate-500 flex items-center gap-1 mt-0.5 truncate">
                 <Mail :size="14" class="shrink-0 text-slate-600" />
                 <span class="truncate">{{ u.email }}</span>
